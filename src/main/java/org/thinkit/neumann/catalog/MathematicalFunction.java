@@ -127,7 +127,12 @@ public enum MathematicalFunction implements Catalog<MathematicalFunction> {
     /**
      * 乱数
      */
-    RANDOM(19);
+    RANDOM(19),
+
+    /**
+     * 平方根
+     */
+    SQRT(20);
 
     /**
      * コード値
