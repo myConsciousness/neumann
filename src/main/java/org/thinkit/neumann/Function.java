@@ -16,6 +16,7 @@ package org.thinkit.neumann;
 
 import java.io.Serializable;
 
+import org.thinkit.neumann.catalog.Arity;
 import org.thinkit.neumann.catalog.FunctionPattern;
 
 import lombok.AccessLevel;
@@ -47,16 +48,10 @@ public final class Function implements Serializable {
     private FunctionPattern functionPattern;
 
     /**
-     * 引数の数（from）
+     * 引数の数
      */
     @Getter(AccessLevel.PROTECTED)
-    private final int argcFrom = 1;
-
-    /**
-     * 引数の数（to）
-     */
-    @Getter(AccessLevel.PROTECTED)
-    private int argcTo;
+    private Arity arity;
 
     /**
      * デフォルトコンストラクタ
@@ -76,9 +71,9 @@ public final class Function implements Serializable {
 
         if (functionPattern == FunctionPattern.MAX || functionPattern == FunctionPattern.MIN
                 || functionPattern == FunctionPattern.SUM || functionPattern == FunctionPattern.AVERAGE) {
-            this.argcTo = Integer.MAX_VALUE;
+            this.arity = Arity.FINITARY;
         } else {
-            this.argcTo = 1;
+            this.arity = Arity.UNARY;
         }
     }
 
