@@ -20,7 +20,7 @@ import org.thinkit.neumann.catalog.CloseBracket;
 import org.thinkit.neumann.catalog.MathematicalFunction;
 import org.thinkit.neumann.catalog.MathematicalOperator;
 import org.thinkit.neumann.catalog.OpenBracket;
-import org.thinkit.neumann.catalog.TokenType;
+import org.thinkit.neumann.catalog.TokenPattern;
 
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -43,9 +43,9 @@ public final class ExpressionToken implements Serializable {
     private static final long serialVersionUID = 1530347236413716636L;
 
     /**
-     * トークン種別
+     * トークンパターン
      */
-    private TokenType tokenType;
+    private TokenPattern tokenPattern;
 
     /**
      * トークン
@@ -61,13 +61,13 @@ public final class ExpressionToken implements Serializable {
     /**
      * コンストラクタ
      *
-     * @param tokenType トークン種別
-     * @param token     トークン
+     * @param tokenPattern トークンパターン
+     * @param token        トークン
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    private ExpressionToken(@NonNull TokenType tokenType, @NonNull Object token) {
-        this.tokenType = tokenType;
+    private ExpressionToken(@NonNull TokenPattern tokenPattern, @NonNull Object token) {
+        this.tokenPattern = tokenPattern;
         this.token = token;
     }
 
@@ -80,7 +80,7 @@ public final class ExpressionToken implements Serializable {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static ExpressionToken of(@NonNull String literal) {
-        return new ExpressionToken(TokenType.LITERAL, literal);
+        return new ExpressionToken(TokenPattern.LITERAL, literal);
     }
 
     /**
@@ -92,7 +92,7 @@ public final class ExpressionToken implements Serializable {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static ExpressionToken of(@NonNull MathematicalOperator operator) {
-        return new ExpressionToken(TokenType.OPERATOR, operator);
+        return new ExpressionToken(TokenPattern.OPERATOR, operator);
     }
 
     /**
@@ -104,7 +104,7 @@ public final class ExpressionToken implements Serializable {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static ExpressionToken of(@NonNull MathematicalFunction function) {
-        return new ExpressionToken(TokenType.FUNCTION, function);
+        return new ExpressionToken(TokenPattern.FUNCTION, function);
     }
 
     /**
@@ -116,7 +116,7 @@ public final class ExpressionToken implements Serializable {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static ExpressionToken of(@NonNull OpenBracket openBracket) {
-        return new ExpressionToken(TokenType.OPEN_BRACKET, openBracket);
+        return new ExpressionToken(TokenPattern.OPEN_BRACKET, openBracket);
     }
 
     /**
@@ -128,6 +128,90 @@ public final class ExpressionToken implements Serializable {
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
     public static ExpressionToken of(@NonNull CloseBracket closeBracket) {
-        return new ExpressionToken(TokenType.CLOSE_BRACKET, closeBracket);
+        return new ExpressionToken(TokenPattern.CLOSE_BRACKET, closeBracket);
+    }
+
+    /**
+     * トークンがリテラルであるか判定します。
+     *
+     * @return トークンがリテラルである場合は {@code true} 、それ以外の場合は {@code false}
+     */
+    public boolean isLiteral() {
+        return this.tokenPattern == TokenPattern.LITERAL;
+    }
+
+    /**
+     * トークンが演算子であるか判定します。
+     *
+     * @return トークンが演算子である場合は {@code true} 、それ以外の場合は {@code false}
+     */
+    public boolean isOperator() {
+        return this.tokenPattern == TokenPattern.OPERATOR;
+    }
+
+    /**
+     * トークンが関数であるか判定します。
+     *
+     * @return トークンが関数である場合は {@code true} 、それ以外の場合は {@code false}
+     */
+    public boolean isFunction() {
+        return this.tokenPattern == TokenPattern.FUNCTION;
+    }
+
+    /**
+     * トークンが始め括弧であるか判定します。
+     *
+     * @return トークンが始め括弧である場合は {@code true} 、それ以外の場合は {@code false}
+     */
+    public boolean isOpenBracket() {
+        return this.tokenPattern == TokenPattern.OPEN_BRACKET;
+    }
+
+    /**
+     * トークンが終わり括弧であるか判定します。
+     *
+     * @return トークンが終わり括弧である場合は {@code true} 、それ以外の場合は {@code false}
+     */
+    public boolean isCloseBracket() {
+        return this.tokenPattern == TokenPattern.CLOSE_BRACKET;
+    }
+
+    /**
+     * トークンを文字列として返却します。
+     *
+     * @return 文字列のトークン
+     */
+    public String getLiteral() {
+        return String.valueOf(this.token);
+    }
+
+    /**
+     * トークンを {@link MathematicalOperator} 型へ変換し返却します。
+     * <p>
+     * {@link #getOperator()} メソッドを呼び出す前に必ず {@link #isOperator()}
+     * メソッドでトークンパターンを確認してください。トークンパターンが {@link TokenPattern#OPERATOR}
+     * ではないトークンオブジェクトに対して {@link #getOperator()} メソッドを使用した場合は必ず
+     * {@link ClassCastException} が実行時に発生します。
+     *
+     * @return {@link MathematicalOperator} 型のトークン
+     *
+     * @exception ClassCastException トークンパターンが {@link TokenPattern#OPERATOR}
+     *                               ではないトークンオブジェクトに対して {@link #getOperator()}
+     *                               メソッドが呼び出された場合
+     */
+    public MathematicalOperator getOperator() {
+        return (MathematicalOperator) this.token;
+    }
+
+    public MathematicalFunction getFunction() {
+        return (MathematicalFunction) this.token;
+    }
+
+    public OpenBracket getOpenBracket() {
+        return (OpenBracket) this.token;
+    }
+
+    public CloseBracket getCloseBracket() {
+        return (CloseBracket) this.token;
     }
 }
