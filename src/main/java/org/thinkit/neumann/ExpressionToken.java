@@ -72,10 +72,10 @@ public final class ExpressionToken implements Serializable {
     }
 
     /**
-     * リテラルを表現する新しい {@link ExpresionToken} クラスを生成し返却します。
+     * リテラルを表現する新しい {@link ExpresionToken} クラスのインスタンスを生成し返却します。
      *
      * @param literal リテラル
-     * @return リテラルを表現する新しい {@link ExpresionToken} クラス
+     * @return リテラルを表現する新しい {@link ExpresionToken} クラスのインスタンス
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
@@ -84,10 +84,10 @@ public final class ExpressionToken implements Serializable {
     }
 
     /**
-     * 演算子を表現する新しい {@link ExpresionToken} クラスを生成し返却します。
+     * 演算子を表現する新しい {@link ExpresionToken} クラスのインスタンスを生成し返却します。
      *
      * @param operator 演算子
-     * @return 演算子を表現する新しい {@link ExpresionToken} クラス
+     * @return 演算子を表現する新しい {@link ExpresionToken} クラスのインスタンス
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
@@ -96,10 +96,10 @@ public final class ExpressionToken implements Serializable {
     }
 
     /**
-     * 関数を表現する新しい {@link ExpresionToken} クラスを生成し返却します。
+     * 関数を表現する新しい {@link ExpresionToken} クラスのインスタンスを生成し返却します。
      *
      * @param function 関数
-     * @return 関数を表現する新しい {@link ExpresionToken} クラス
+     * @return 関数を表現する新しい {@link ExpresionToken} クラスのインスタンス
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
@@ -108,10 +108,10 @@ public final class ExpressionToken implements Serializable {
     }
 
     /**
-     * 始め括弧を表現する新しい {@link ExpresionToken} クラスを生成し返却します。
+     * 始め括弧を表現する新しい {@link ExpresionToken} クラスのインスタンスを生成し返却します。
      *
      * @param openBracket 始め括弧
-     * @return 始め括弧を表現する新しい {@link ExpresionToken} クラス
+     * @return 始め括弧を表現する新しい {@link ExpresionToken} クラスのインスタンス
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
@@ -120,10 +120,10 @@ public final class ExpressionToken implements Serializable {
     }
 
     /**
-     * 終わり括弧を表現する新しい {@link ExpresionToken} クラスを生成し返却します。
+     * 終わり括弧を表現する新しい {@link ExpresionToken} クラスのインスタンスを生成し返却します。
      *
      * @param closeBracket 終わり括弧
-     * @return 終わり括弧を表現する新しい {@link ExpresionToken} クラス
+     * @return 終わり括弧を表現する新しい {@link ExpresionToken} クラスのインスタンス
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
@@ -203,14 +203,56 @@ public final class ExpressionToken implements Serializable {
         return (MathematicalOperator) this.token;
     }
 
+    /**
+     * トークンを {@link MathematicalFunction} 型へ変換し返却します。
+     * <p>
+     * {@link #getFunction()} メソッドを呼び出す前に必ず {@link #isFunction()}
+     * メソッドでトークンパターンを確認してください。トークンパターンが {@link TokenPattern#FUNCTION}
+     * ではないトークンオブジェクトに対して {@link #getFunction()} メソッドを使用した場合は必ず
+     * {@link ClassCastException} が実行時に発生します。
+     *
+     * @return {@link MathematicalFunction} 型のトークン
+     *
+     * @exception ClassCastException トークンパターンが {@link TokenPattern#FUNCTION}
+     *                               ではないトークンオブジェクトに対して {@link #getFunction()}
+     *                               メソッドが呼び出された場合
+     */
     public MathematicalFunction getFunction() {
         return (MathematicalFunction) this.token;
     }
 
+    /**
+     * トークンを {@link OpenBracket} 型へ変換し返却します。
+     * <p>
+     * {@link #getOpenBracket()} メソッドを呼び出す前に必ず {@link #isOpenBracket()}
+     * メソッドでトークンパターンを確認してください。トークンパターンが {@link TokenPattern#OPEN_BRACKET}
+     * ではないトークンオブジェクトに対して {@link #getOpenBracket()} メソッドを使用した場合は必ず
+     * {@link ClassCastException} が実行時に発生します。
+     *
+     * @return {@link OpenBracket} 型のトークン
+     *
+     * @exception ClassCastException トークンパターンが {@link TokenPattern#OPEN_BRACKET}
+     *                               ではないトークンオブジェクトに対して {@link #getOpenBracket()}
+     *                               メソッドが呼び出された場合
+     */
     public OpenBracket getOpenBracket() {
         return (OpenBracket) this.token;
     }
 
+    /**
+     * トークンを {@link CloseBracket} 型へ変換し返却します。
+     * <p>
+     * {@link #getCloseBracket()} メソッドを呼び出す前に必ず {@link #isCloseBracket()}
+     * メソッドでトークンパターンを確認してください。トークンパターンが {@link TokenPattern#CLOSE_BRACKET}
+     * ではないトークンオブジェクトに対して {@link #getCloseBracket()} メソッドを使用した場合は必ず
+     * {@link ClassCastException} が実行時に発生します。
+     *
+     * @return {@link CloseBracket} 型のトークン
+     *
+     * @exception ClassCastException トークンパターンが {@link TokenPattern#CLOSE_BRACKET}
+     *                               ではないトークンオブジェクトに対して {@link #getCloseBracket()}
+     *                               メソッドが呼び出された場合
+     */
     public CloseBracket getCloseBracket() {
         return (CloseBracket) this.token;
     }
