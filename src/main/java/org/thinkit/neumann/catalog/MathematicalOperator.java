@@ -15,6 +15,7 @@
 package org.thinkit.neumann.catalog;
 
 import org.thinkit.api.catalog.BiCatalog;
+import org.thinkit.neumann.Operator;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,42 +28,42 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum MathematicalOperator implements BiCatalog<MathematicalOperator, String> {
+public enum MathematicalOperator implements BiCatalog<MathematicalOperator, Operator> {
 
     /**
      * 反転
      */
-    NEGATE(0, "-"),
+    NEGATE(0, Operator.of(OperatorPattern.NEGATE)),
 
     /**
      * 減算
      */
-    MINUS(1, "-"),
+    MINUS(1, Operator.of(OperatorPattern.MINUS)),
 
     /**
      * 加算
      */
-    PLUS(2, "+"),
+    PLUS(2, Operator.of(OperatorPattern.PLUS)),
 
     /**
      * 乗算
      */
-    MULTIPLY(3, "*"),
+    MULTIPLY(3, Operator.of(OperatorPattern.MULTIPLY)),
 
     /**
      * 除算
      */
-    DIVIDE(4, "/"),
+    DIVIDE(4, Operator.of(OperatorPattern.DIVIDE)),
 
     /**
      * 指数
      */
-    EXPONENT(5, "^"),
+    EXPONENT(5, Operator.of(OperatorPattern.EXPONENT)),
 
     /**
      * 剰余
      */
-    MODULO(6, "%");
+    MODULO(6, Operator.of(OperatorPattern.MODULO));
 
     /**
      * コード値
@@ -74,5 +75,5 @@ public enum MathematicalOperator implements BiCatalog<MathematicalOperator, Stri
      * タグ
      */
     @Getter
-    private final String tag;
+    private final Operator tag;
 }
