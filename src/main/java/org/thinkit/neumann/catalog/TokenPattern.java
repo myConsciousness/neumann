@@ -20,14 +20,14 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 式のトークン種別を管理するカタログです。
+ * 式のトークンパターンを管理するカタログです。
  *
  * @author Kato Shinya
  * @since 1.0
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum TokenType implements Catalog<TokenType> {
+public enum TokenPattern implements Catalog<TokenPattern> {
 
     /**
      * 始め括弧
