@@ -16,6 +16,7 @@ package org.thinkit.neumann;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.Iterator;
 
 import org.thinkit.neumann.catalog.MathematicalConstant;
@@ -98,8 +99,8 @@ public final class Neumann implements Evaluator {
     @Override
     public BigDecimal evaluate(@NonNull MathematicalFunction function, @NonNull Iterator<BigDecimal> arguments) {
         return switch (function) {
-            case CEIL -> arguments.next().setScale(BigDecimal.ROUND_CEILING);
-            case FLOOR -> arguments.next().setScale(BigDecimal.ROUND_FLOOR);
+            case CEIL -> arguments.next().setScale(0, RoundingMode.CEILING);
+            case FLOOR -> arguments.next().setScale(0, RoundingMode.FLOOR);
             case ROUND -> arguments.next().round(new MathContext(100));
             case ABS -> arguments.next().abs();
             case SINE -> BigDecimalMath.sin(arguments.next(), new MathContext(100));
@@ -129,12 +130,28 @@ public final class Neumann implements Evaluator {
 
                 yield maximum;
             }
-            case SUM -> arguments.next();
-            case AVERAGE -> arguments.next();
-            case LN -> arguments.next();
-            case LOG -> arguments.next();
-            case RANDOM -> arguments.next();
-            case SQRT -> arguments.next();
+            case SUM -> {
+                BigDecimal sum = arguments.next();
+
+                while (arguments.hasNext()) {
+                    sum = sum.add(arguments.next());
+                }
+
+                yield sum;
+            }
+            case AVERAGE -> {
+                BigDecimal average = arguments.next();
+                int count = 1;
+
+                while (arguments.hasNext()) {
+                    average = average.add(arguments.next());
+                    count++;
+                }
+
+                yield average.divide(new BigDecimal(count));
+            }
+            case LOG -> BigDecimalMath.log(arguments.next(), new MathContext(100));
+            case SQRT -> BigDecimalMath.sqrt(arguments.next(), new MathContext(100));
         };
     }
 }
