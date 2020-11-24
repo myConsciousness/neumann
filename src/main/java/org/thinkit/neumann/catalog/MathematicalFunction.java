@@ -116,24 +116,14 @@ public enum MathematicalFunction implements BiCatalog<MathematicalFunction, Func
     AVERAGE(16, Function.of(FunctionPattern.AVERAGE)),
 
     /**
-     * 自然対数
+     * 対数
      */
-    LN(17, Function.of(FunctionPattern.LN)),
-
-    /**
-     * 常用対数
-     */
-    LOG(18, Function.of(FunctionPattern.LOG)),
-
-    /**
-     * 乱数
-     */
-    RANDOM(19, Function.of(FunctionPattern.RANDOM)),
+    LOG(17, Function.of(FunctionPattern.LOG)),
 
     /**
      * 平方根
      */
-    SQRT(20, Function.of(FunctionPattern.SQRT));
+    SQRT(18, Function.of(FunctionPattern.SQRT));
 
     /**
      * コード値
