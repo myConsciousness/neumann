@@ -22,7 +22,7 @@ import lombok.ToString;
 
 @ToString
 @EqualsAndHashCode
-public final class ExpressionTokenizer {
+final class ExpressionTokenizer {
 
     /**
      * 式の正規表現パターン

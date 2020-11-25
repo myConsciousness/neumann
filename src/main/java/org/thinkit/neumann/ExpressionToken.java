@@ -35,7 +35,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-public final class ExpressionToken implements Serializable {
+final class ExpressionToken implements Serializable {
 
     /**
      * シリアルバージョンUID
