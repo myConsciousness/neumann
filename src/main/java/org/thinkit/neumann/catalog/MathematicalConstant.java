@@ -14,7 +14,7 @@
 
 package org.thinkit.neumann.catalog;
 
-import org.thinkit.api.catalog.Catalog;
+import org.thinkit.api.catalog.BiCatalog;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -27,21 +27,27 @@ import lombok.RequiredArgsConstructor;
  * @version 1.0
  */
 @RequiredArgsConstructor
-public enum MathematicalConstant implements Catalog<MathematicalConstant> {
+public enum MathematicalConstant implements BiCatalog<MathematicalConstant, String> {
 
     /**
      * 円周率 (3.14)
      */
-    PI(0),
+    PI(0, "pi"),
 
     /**
      * ネイピア数
      */
-    NAPIER(1);
+    NAPIER(1, "e");
 
     /**
      * コード値
      */
     @Getter
     private final int code;
+
+    /**
+     * タグ
+     */
+    @Getter
+    private final String tag;
 }
