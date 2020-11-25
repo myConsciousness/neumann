@@ -30,7 +30,7 @@ import lombok.NonNull;
 import lombok.ToString;
 
 /**
- * -
+ *
  *
  * @author Kato Shinya
  * @since 1.0
@@ -39,6 +39,11 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public final class Neumann implements Evaluator {
+
+    /**
+     * 演算規則
+     */
+    private static final MathContext MATH_CONTEXT = new MathContext(20);
 
     /**
      * 評価する式
@@ -78,8 +83,8 @@ public final class Neumann implements Evaluator {
     @Override
     public BigDecimal evaluate(@NonNull MathematicalConstant constant) {
         return switch (constant) {
-            case PI -> BigDecimalMath.pi(new MathContext(100));
-            case NAPIER -> BigDecimalMath.e(new MathContext(100));
+            case PI -> BigDecimalMath.pi(MATH_CONTEXT);
+            case NAPIER -> BigDecimalMath.e(MATH_CONTEXT);
         };
     }
 
@@ -91,7 +96,7 @@ public final class Neumann implements Evaluator {
             case PLUS -> operands.next().add(operands.next());
             case MULTIPLY -> operands.next().multiply(operands.next());
             case DIVIDE -> operands.next().divide(operands.next());
-            case EXPONENT -> BigDecimalMath.pow(operands.next(), operands.next(), new MathContext(100));
+            case EXPONENT -> BigDecimalMath.pow(operands.next(), operands.next(), MATH_CONTEXT);
             case MODULO -> operands.next().remainder(operands.next());
         };
     }
@@ -101,17 +106,17 @@ public final class Neumann implements Evaluator {
         return switch (function) {
             case CEIL -> arguments.next().setScale(0, RoundingMode.CEILING);
             case FLOOR -> arguments.next().setScale(0, RoundingMode.FLOOR);
-            case ROUND -> arguments.next().round(new MathContext(100));
+            case ROUND -> arguments.next().round(MATH_CONTEXT);
             case ABS -> arguments.next().abs();
-            case SINE -> BigDecimalMath.sin(arguments.next(), new MathContext(100));
-            case COSINE -> BigDecimalMath.cos(arguments.next(), new MathContext(100));
-            case TANGENT -> BigDecimalMath.tan(arguments.next(), new MathContext(100));
-            case ARC_SINE -> BigDecimalMath.asin(arguments.next(), new MathContext(100));
-            case ARC_COSINE -> BigDecimalMath.acos(arguments.next(), new MathContext(100));
-            case ARC_TANGENT -> BigDecimalMath.atan(arguments.next(), new MathContext(100));
-            case HYPERBOLIC_SINE -> BigDecimalMath.sinh(arguments.next(), new MathContext(100));
-            case HYPERBOLIC_COSINE -> BigDecimalMath.cosh(arguments.next(), new MathContext(100));
-            case HYPERBOLIC_TANGENT -> BigDecimalMath.tanh(arguments.next(), new MathContext(100));
+            case SINE -> BigDecimalMath.sin(arguments.next(), MATH_CONTEXT);
+            case COSINE -> BigDecimalMath.cos(arguments.next(), MATH_CONTEXT);
+            case TANGENT -> BigDecimalMath.tan(arguments.next(), MATH_CONTEXT);
+            case ARC_SINE -> BigDecimalMath.asin(arguments.next(), MATH_CONTEXT);
+            case ARC_COSINE -> BigDecimalMath.acos(arguments.next(), MATH_CONTEXT);
+            case ARC_TANGENT -> BigDecimalMath.atan(arguments.next(), MATH_CONTEXT);
+            case HYPERBOLIC_SINE -> BigDecimalMath.sinh(arguments.next(), MATH_CONTEXT);
+            case HYPERBOLIC_COSINE -> BigDecimalMath.cosh(arguments.next(), MATH_CONTEXT);
+            case HYPERBOLIC_TANGENT -> BigDecimalMath.tanh(arguments.next(), MATH_CONTEXT);
             case MIN -> {
                 BigDecimal minimum = arguments.next();
 
@@ -150,8 +155,8 @@ public final class Neumann implements Evaluator {
 
                 yield average.divide(new BigDecimal(count));
             }
-            case LOG -> BigDecimalMath.log(arguments.next(), new MathContext(100));
-            case SQRT -> BigDecimalMath.sqrt(arguments.next(), new MathContext(100));
+            case LOG -> BigDecimalMath.log(arguments.next(), MATH_CONTEXT);
+            case SQRT -> BigDecimalMath.sqrt(arguments.next(), MATH_CONTEXT);
         };
     }
 }
