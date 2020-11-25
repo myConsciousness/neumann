@@ -93,37 +93,38 @@ public interface Evaluator {
     public BigDecimal evaluate(@NonNull MathematicalFunction function, @NonNull Iterator<BigDecimal> arguments);
 
     default String evaluate() {
-        final Deque<BigDecimal> values = new ArrayDeque<>(); // values stack
-        final Deque<ExpressionToken> stack = new ArrayDeque<>(); // operator stack
-        final Deque<Integer> previousValuesSize = new ArrayDeque<>();
+
+        final Deque<BigDecimal> valueStack = new ArrayDeque<>();
+        final Deque<ExpressionToken> symbolStack = new ArrayDeque<>();
+        final Deque<Integer> valueSizeStack = new ArrayDeque<>();
         final ExpressionTokenizer tokens = ExpressionTokenizer.of(this.getExpression());
 
         ExpressionToken previous = null;
 
         while (tokens.hasMoreTokens()) {
 
-            String strToken = tokens.nextToken();
+            final String token = tokens.nextToken();
 
-            if (StringUtils.isEmpty(strToken)) {
+            if (StringUtils.isEmpty(token)) {
                 continue;
             }
 
-            final ExpressionToken token = toExpressionToken(strToken);
+            final ExpressionToken expressionToken = this.toExpressionToken(token);
 
-            if (token.isOpenBracket()) {
+            if (expressionToken.isOpenBracket()) {
 
-                stack.push(token);
+                symbolStack.push(expressionToken);
 
                 if (previous != null && previous.isFunction()) {
-                    if (!BiCatalog.contains(OpenBracket.class, token.getOpenBracket().getTag())) {
-                        throw new IllegalArgumentException("Invalid bracket after function: " + strToken);
+                    if (!BiCatalog.contains(OpenBracket.class, expressionToken.getOpenBracket().getTag())) {
+                        throw new IllegalArgumentException("Invalid bracket after function: " + token);
                     }
                 } else {
-                    if (!BiCatalog.contains(OpenBracket.class, token.getOpenBracket().getTag())) {
-                        throw new IllegalArgumentException("Invalid bracket in expression: " + strToken);
+                    if (!BiCatalog.contains(OpenBracket.class, expressionToken.getOpenBracket().getTag())) {
+                        throw new IllegalArgumentException("Invalid bracket in expression: " + token);
                     }
                 }
-            } else if (token.isCloseBracket()) {
+            } else if (expressionToken.isCloseBracket()) {
                 Preconditions.requireNonNull(previous,
                         new IllegalArgumentException("expression can't start with a close bracket"));
 
@@ -131,11 +132,11 @@ public interface Evaluator {
                     throw new IllegalArgumentException("argument is missing");
                 }
 
-                CloseBracket closeBracket = token.getCloseBracket();
+                CloseBracket closeBracket = expressionToken.getCloseBracket();
                 boolean openBracketFound = false;
 
-                while (!stack.isEmpty()) {
-                    ExpressionToken sc = stack.pop();
+                while (!symbolStack.isEmpty()) {
+                    ExpressionToken sc = symbolStack.pop();
                     if (sc.isOpenBracket()) {
                         if (BiCatalog.getEnum(OpenBracket.class, closeBracket.getCode()).getTag()
                                 .equals(sc.getOpenBracket().getTag())) {
@@ -146,7 +147,7 @@ public interface Evaluator {
                                     sc.getOpenBracket().getTag(), closeBracket.getTag()));
                         }
                     } else {
-                        output(values, sc);
+                        output(valueStack, sc);
                     }
                 }
 
@@ -154,11 +155,11 @@ public interface Evaluator {
                     throw new IllegalArgumentException("Parentheses mismatched");
                 }
 
-                if (!stack.isEmpty() && stack.peek().isFunction()) {
-                    final int argumentCount = values.size() - previousValuesSize.pop();
-                    this.evaluate(values, stack.pop().getFunction(), argumentCount);
+                if (!symbolStack.isEmpty() && symbolStack.peek().isFunction()) {
+                    final int argumentCount = valueStack.size() - valueSizeStack.pop();
+                    this.evaluate(valueStack, symbolStack.pop().getFunction(), argumentCount);
                 }
-            } else if (token.isFunctionArgumentSeparator()) {
+            } else if (expressionToken.isFunctionArgumentSeparator()) {
                 if (previous == null) {
                     throw new IllegalArgumentException("expression can't start with a function argument separator");
                 }
@@ -170,70 +171,74 @@ public interface Evaluator {
 
                 boolean pe = false;
 
-                while (!stack.isEmpty()) {
-                    if (stack.peek().isOpenBracket()) {
+                while (!symbolStack.isEmpty()) {
+                    if (symbolStack.peek().isOpenBracket()) {
                         pe = true;
                         break;
                     } else {
-                        output(values, stack.pop());
+                        output(valueStack, symbolStack.pop());
                     }
                 }
                 if (!pe) {
                     throw new IllegalArgumentException("Separator or parentheses mismatched");
                 } else {
-                    ExpressionToken openBracket = stack.pop();
-                    ExpressionToken scopeToken = stack.peek();
-                    stack.push(openBracket);
+                    ExpressionToken openBracket = symbolStack.pop();
+                    ExpressionToken scopeToken = symbolStack.peek();
+                    symbolStack.push(openBracket);
                     if (!scopeToken.isFunction()) {
                         throw new IllegalArgumentException("Argument separator used outside of function scope");
                     }
                 }
-            } else if (token.isFunction()) {
-                stack.push(token);
-                previousValuesSize.push(values.size());
-            } else if (token.isOperator()) {
+            } else if (expressionToken.isFunction()) {
+                symbolStack.push(expressionToken);
+                valueSizeStack.push(valueStack.size());
+            } else if (expressionToken.isOperator()) {
 
-                while (!stack.isEmpty()) {
+                while (!symbolStack.isEmpty()) {
 
-                    ExpressionToken sc = stack.peek();
+                    ExpressionToken sc = symbolStack.peek();
 
-                    if (sc.isOperator()
-                            && ((token.getOperator().getTag().getAssociativity() == OperatorAssociativity.LEFT)
-                                    && (token.getOperator().getTag().getPrecedence().getTag() <= sc.getOperator()
-                                            .getTag().getPrecedence().getTag())
-                                    || (token.getOperator().getTag().getPrecedence().getTag() < sc.getOperator()
-                                            .getTag().getPrecedence().getTag()))) {
-                        this.output(values, stack.pop());
+                    if (sc.isOperator() && ((expressionToken.getOperator().getTag()
+                            .getAssociativity() == OperatorAssociativity.LEFT)
+                            && (expressionToken.getOperator().getTag().getPrecedence().getTag() <= sc.getOperator()
+                                    .getTag().getPrecedence().getTag())
+                            || (expressionToken.getOperator().getTag().getPrecedence().getTag() < sc.getOperator()
+                                    .getTag().getPrecedence().getTag()))) {
+                        this.output(valueStack, symbolStack.pop());
                     } else {
                         break;
                     }
                 }
 
-                stack.push(token);
+                symbolStack.push(expressionToken);
             } else {
 
                 if ((previous != null) && previous.isLiteral()) {
                     throw new IllegalArgumentException("A literal can't follow another literal");
                 }
 
-                output(values, token);
+                output(valueStack, expressionToken);
             }
-            previous = token;
+
+            previous = expressionToken;
         }
 
-        while (!stack.isEmpty()) {
-            ExpressionToken sc = stack.pop();
+        while (!symbolStack.isEmpty()) {
+
+            ExpressionToken sc = symbolStack.pop();
+
             if (sc.isOpenBracket() || sc.isCloseBracket()) {
                 throw new IllegalArgumentException("Parentheses mismatched");
             }
-            output(values, sc);
+
+            output(valueStack, sc);
         }
 
-        if (values.size() != 1) {
+        if (valueStack.size() != 1) {
             throw new IllegalArgumentException();
         }
 
-        return values.pop().toString();
+        return valueStack.pop().toString();
     }
 
     private void evaluate(Deque<BigDecimal> values, MathematicalFunction function, int argumentCount) {
