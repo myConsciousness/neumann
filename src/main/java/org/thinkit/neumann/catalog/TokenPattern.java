@@ -57,7 +57,12 @@ public enum TokenPattern implements Catalog<TokenPattern> {
     /**
      * リテラル
      */
-    LITERAL(5);
+    LITERAL(5),
+
+    /**
+     * 関数における引数の区切り文字
+     */
+    FUNCTION_ARGUMENT_SEPARATOR(6);
 
     /**
      * コード値
