@@ -27,7 +27,7 @@ public final class ExpressionTokenizer {
     /**
      * 式の正規表現パターン
      */
-    private static final String REGEX_PATTERN = "[()-+*/^%]";
+    private static final String REGEX_PATTERN = "[()-+*/^% ]";
 
     private StringTokenizer tokenizer;
 
@@ -44,6 +44,6 @@ public final class ExpressionTokenizer {
     }
 
     public String nextToken() {
-        return this.tokenizer.nextToken();
+        return this.tokenizer.nextToken().trim();
     }
 }
