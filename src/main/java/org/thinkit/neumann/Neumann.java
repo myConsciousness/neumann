@@ -76,7 +76,7 @@ public final class Neumann implements Evaluator {
      *
      * @exception NullPointerException 引数として {@code null} が渡された場合
      */
-    public static Evaluator of(@NonNull String expression) {
+    public static Evaluator input(@NonNull String expression) {
         return new Neumann(expression);
     }
 
