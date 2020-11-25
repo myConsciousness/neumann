@@ -20,6 +20,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.apache.commons.lang3.StringUtils;
 import org.thinkit.api.catalog.BiCatalog;
 import org.thinkit.common.Preconditions;
 import org.thinkit.neumann.catalog.Arity;
@@ -102,6 +103,11 @@ public interface Evaluator {
         while (tokens.hasMoreTokens()) {
 
             String strToken = tokens.nextToken();
+
+            if (StringUtils.isEmpty(strToken)) {
+                continue;
+            }
+
             final ExpressionToken token = toExpressionToken(strToken);
 
             if (token.isOpenBracket()) {
@@ -125,18 +131,19 @@ public interface Evaluator {
                     throw new IllegalArgumentException("argument is missing");
                 }
 
-                OpenBracket openBracket = token.getOpenBracket();
+                CloseBracket closeBracket = token.getCloseBracket();
                 boolean openBracketFound = false;
 
                 while (!stack.isEmpty()) {
                     ExpressionToken sc = stack.pop();
                     if (sc.isOpenBracket()) {
-                        if (openBracket.getTag().equals(sc.getOpenBracket().getTag())) {
+                        if (BiCatalog.getEnum(OpenBracket.class, closeBracket.getCode()).getTag()
+                                .equals(sc.getOpenBracket().getTag())) {
                             openBracketFound = true;
                             break;
                         } else {
                             throw new IllegalArgumentException(String.format("Invalid parenthesis match: %s and %s",
-                                    openBracket.getTag(), sc.getOpenBracket().getTag()));
+                                    sc.getOpenBracket().getTag(), closeBracket.getTag()));
                         }
                     } else {
                         output(values, sc);
