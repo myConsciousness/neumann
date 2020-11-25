@@ -115,24 +115,13 @@ public enum FunctionPattern implements BiCatalog<FunctionPattern, String> {
     AVERAGE(16, "avg"),
 
     /**
-     * 自然対数
+     * 対数
      */
-    LN(17, "ln"),
-
-    /**
-     * 常用対数
-     */
-    LOG(18, "log"),
-
-    /**
-     * 乱数
-     */
-    RANDOM(19, "random"),
-
+    LOG(17, "log"),
     /**
      * 平方根
      */
-    SQRT(20, "sqrt");
+    SQRT(18, "sqrt");
 
     /**
      * コード値

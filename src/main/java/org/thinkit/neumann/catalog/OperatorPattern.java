@@ -32,7 +32,7 @@ public enum OperatorPattern implements BiCatalog<OperatorPattern, String> {
     /**
      * 反転
      */
-    NEGATE(0, "-"),
+    NEGATE(0, "!"),
 
     /**
      * 減算
