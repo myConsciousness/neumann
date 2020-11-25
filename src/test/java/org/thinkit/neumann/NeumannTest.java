@@ -9,9 +9,9 @@ public class NeumannTest {
 
     @Test
     void testNeumann() {
-        String result = Neumann.input("1+2*1*2/2").evaluate();
+        String result = Neumann.input("3*(4-9)/3").evaluate();
 
         assertNotNull(result);
-        assertEquals("3", result);
+        assertEquals("-5", result);
     }
 }
