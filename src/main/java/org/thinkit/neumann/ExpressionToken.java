@@ -132,6 +132,15 @@ public final class ExpressionToken implements Serializable {
     }
 
     /**
+     * 関数における引数の区切り文字を表現する新しい {@link ExpresionToken} クラスのインスタンスを生成し返却します。
+     *
+     * @return 関数における引数の区切り文字を表現する新しい {@link ExpresionToken} クラスのインスタンス
+     */
+    public static ExpressionToken separator() {
+        return new ExpressionToken(TokenPattern.FUNCTION_ARGUMENT_SEPARATOR, new Object());
+    }
+
+    /**
      * トークンがリテラルであるか判定します。
      *
      * @return トークンがリテラルである場合は {@code true} 、それ以外の場合は {@code false}
@@ -174,6 +183,15 @@ public final class ExpressionToken implements Serializable {
      */
     public boolean isCloseBracket() {
         return this.tokenPattern == TokenPattern.CLOSE_BRACKET;
+    }
+
+    /**
+     * トークンが関数における引数の区切り文字であるか判定します。
+     *
+     * @return トークンが関数における引数の区切り文字である場合は {@code true} 、それ以外の場合は {@code false}
+     */
+    public boolean isFunctionArgumentSeparator() {
+        return this.tokenPattern == TokenPattern.FUNCTION_ARGUMENT_SEPARATOR;
     }
 
     /**
