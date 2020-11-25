@@ -69,7 +69,7 @@ dependencies {
     implementation 'ch.obermuhlner:big-math:2.3.0'
 
     implementation 'org.thinkit.common:precondition-validator:v1.0.9'
-    implementation 'org.thinkit.api.catalog:catalog-api:v1.0.1'
+    implementation 'org.thinkit.api.catalog:catalog-api:v1.0.2'
 }
 
 test {
